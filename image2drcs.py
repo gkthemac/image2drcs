@@ -82,6 +82,7 @@ def main():
 	parser.add_argument('-p', '--pagenumber', default='1a0', type=pageNumberValid, help='page number (default: %(default)s)')
 	parser.add_argument('-d', '--description', help='description in TTI file')
 	parser.add_argument('-g', '--global', dest='globalsrc', action="store_true", help='set DRCS source type to Global (default: Normal)')
+	parser.add_argument('-r', '--reverse', action="store_true", help='invert all pixels (2 colour images only)')
 	parser.add_argument('-3', '--mode3', action="store_true", help='write mode 3 PTUs')
 	args = parser.parse_args()
 
@@ -111,6 +112,11 @@ def main():
 	else:
 		ptuMode = 2
 		ptuWriter.x283 = 'b{nxnKn{b{nxnKn{b{nxnKn{b{nxnKn{@@@@'
+
+	invertDByte = args.reverse
+	if ptuMode != 0 and invertDByte:
+		print('Warning: Invert pixels only works on 2 colour images', file=sys.stderr)
+		invertDByte = False
 
 	ptuWriter.globalSrc = args.globalsrc
 
@@ -204,6 +210,8 @@ def main():
 						# Once the left 6 pixels are collected, write the D-Bytes into the PTUs
 						# then clear the D-Bytes ready for the right 6 pixels
 						if subx == 5 or subx == 11:
+							if invertDByte:
+								dbyte[0] ^= 0x3f
 							ptu[0] = ptu[0] + chr(dbyte[0])
 							ptu[1] = ptu[1] + chr(dbyte[1])
 							ptu[2] = ptu[2] + chr(dbyte[2])

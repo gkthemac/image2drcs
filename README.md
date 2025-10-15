@@ -28,5 +28,8 @@ Set the description in the output TTI file.
 `-g, --global`\
 Set the DRCS source type in the output page to Global DRCS. Without this parameter the DRCS source type in the output page will be Normal DRCS.
 
+`-r, --reverse`\
+Invert all pixels. Only works for 2 colour Mode 0 PTUs.
+
 `-3, --mode3`\
 Write Mode 3 PTUs. The default is to convert 16 colour images to Mode 2 PTUs. A warning will be printed if the image has 4 colours or less.
